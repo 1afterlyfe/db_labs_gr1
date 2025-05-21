@@ -119,3 +119,385 @@ INSERT INTO Answer (value, responseId, questionId) VALUES
 ('Yes', 4, 5),
 ('No issues', 4, 6);
 ```
+
+## RESTfull сервіс для управління даними
+### connection.js:
+```const mysql = require('mysql2/promise');
+require('dotenv').config();
+
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
+module.exports = pool;
+```
+### Контролери
+```const db = require('../db/connection');
+
+exports.getAll = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Answer');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Answer WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'Answer not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.create = async (req, res) => {
+    const { value, responseId, questionId } = req.body;
+    try {
+        const [result] = await db.query(
+            'INSERT INTO Answer (value, responseId, questionId) VALUES (?, ?, ?)',
+            [value, responseId, questionId]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    const fields = Object.keys(req.body);
+    const values = Object.values(req.body);
+    if (fields.length === 0) return res.status(400).json({ message: 'Nothing to update' });
+
+    try {
+        const query = `UPDATE Answer SET ${fields.map(f => `${f} = ?`).join(', ')} WHERE id = ?`;
+        values.push(req.params.id);
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Answer not found' });
+        res.json({ message: 'Answer updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM Answer WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Answer not found' });
+        res.json({ message: 'Answer deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+```const db = require('../db/connection');
+
+exports.getAll = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Question');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Question WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'Question not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.create = async (req, res) => {
+    const { text, type, isRequired, order, surveyId } = req.body;
+    try {
+        const [result] = await db.query(
+            'INSERT INTO Question (text, type, isRequired, `order`, surveyId) VALUES (?, ?, ?, ?, ?)',
+            [text, type, isRequired, order, surveyId]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    const fields = Object.keys(req.body);
+    const values = Object.values(req.body);
+    if (fields.length === 0) return res.status(400).json({ message: 'Nothing to update' });
+
+    try {
+        const query = `UPDATE Question SET ${fields.map(f => `${f} = ?`).join(', ')} WHERE id = ?`;
+        values.push(req.params.id);
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Question not found' });
+        res.json({ message: 'Question updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM Question WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Question not found' });
+        res.json({ message: 'Question deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+```const db = require('../db/connection');
+
+exports.getAll = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Response');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Response WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'Response not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.create = async (req, res) => {
+    const { submissionDate, isComplete, surveyLinkId } = req.body;
+    try {
+        const [result] = await db.query(
+            'INSERT INTO Response (submissionDate, isComplete, surveyLinkId) VALUES (?, ?, ?)',
+            [submissionDate, isComplete, surveyLinkId]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    const fields = Object.keys(req.body);
+    const values = Object.values(req.body);
+    if (fields.length === 0) return res.status(400).json({ message: 'Nothing to update' });
+
+    try {
+        const query = `UPDATE Response SET ${fields.map(f => `${f} = ?`).join(', ')} WHERE id = ?`;
+        values.push(req.params.id);
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Response not found' });
+        res.json({ message: 'Response updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM Response WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Response not found' });
+        res.json({ message: 'Response deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+```const db = require('../db/connection');
+
+exports.getAll = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Survey');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM Survey WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'Survey not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.create = async (req, res) => {
+    const { title, description, status, creationDate, closeDate, userId } = req.body;
+    try {
+        const [result] = await db.query(
+            'INSERT INTO Survey (title, description, status, creationDate, closeDate, userId) VALUES (?, ?, ?, ?, ?, ?)',
+            [title, description, status, creationDate, closeDate, userId]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    const fields = Object.keys(req.body);
+    const values = Object.values(req.body);
+    if (fields.length === 0) return res.status(400).json({ message: 'Nothing to update' });
+
+    try {
+        const query = `UPDATE Survey SET ${fields.map(f => `${f} = ?`).join(', ')} WHERE id = ?`;
+        values.push(req.params.id);
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Survey not found' });
+        res.json({ message: 'Survey updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM Survey WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Survey not found' });
+        res.json({ message: 'Survey deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+```const db = require('../db/connection');
+
+exports.getAll = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM SurveyLink');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM SurveyLink WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'SurveyLink not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.create = async (req, res) => {
+    const { token, isActive, expiryDate, clicks, surveyId } = req.body;
+    try {
+        const [result] = await db.query(
+            'INSERT INTO SurveyLink (token, isActive, expiryDate, clicks, surveyId) VALUES (?, ?, ?, ?, ?)',
+            [token, isActive, expiryDate, clicks, surveyId]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    const fields = Object.keys(req.body);
+    const values = Object.values(req.body);
+    if (fields.length === 0) return res.status(400).json({ message: 'Nothing to update' });
+
+    try {
+        const query = `UPDATE SurveyLink SET ${fields.map(f => `${f} = ?`).join(', ')} WHERE id = ?`;
+        values.push(req.params.id);
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'SurveyLink not found' });
+        res.json({ message: 'SurveyLink updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM SurveyLink WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'SurveyLink not found' });
+        res.json({ message: 'SurveyLink deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+```const db = require('../db/connection');
+
+exports.getAll = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM User');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM User WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'User not found' });
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.create = async (req, res) => {
+    const { email, passwordHash, role, isActive } = req.body;
+    try {
+        const [result] = await db.query(
+            'INSERT INTO User (email, passwordHash, role, isActive) VALUES (?, ?, ?, ?)',
+            [email, passwordHash, role, isActive]
+        );
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    const fields = Object.keys(req.body);
+    const values = Object.values(req.body);
+    if (fields.length === 0) return res.status(400).json({ message: 'Nothing to update' });
+
+    try {
+        const query = `UPDATE User SET ${fields.map(f => `${f} = ?`).join(', ')} WHERE id = ?`;
+        values.push(req.params.id);
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'User not found' });
+        res.json({ message: 'User updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM User WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'User not found' });
+        res.json({ message: 'User deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
