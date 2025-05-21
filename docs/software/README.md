@@ -121,8 +121,9 @@ INSERT INTO Answer (value, responseId, questionId) VALUES
 ```
 
 ## RESTfull сервіс для управління даними
-### connection.js:
-```const mysql = require('mysql2/promise');
+### Підключення до БД:
+```js
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const pool = mysql.createPool({
@@ -135,7 +136,8 @@ const pool = mysql.createPool({
 module.exports = pool;
 ```
 ### Контролери
-```const db = require('../db/connection');
+```js
+const db = require('../db/connection');
 
 exports.getAll = async (req, res) => {
     try {
@@ -196,7 +198,8 @@ exports.remove = async (req, res) => {
     }
 };
 ```
-```const db = require('../db/connection');
+```js
+const db = require('../db/connection');
 
 exports.getAll = async (req, res) => {
     try {
@@ -257,7 +260,8 @@ exports.remove = async (req, res) => {
     }
 };
 ```
-```const db = require('../db/connection');
+```js
+const db = require('../db/connection');
 
 exports.getAll = async (req, res) => {
     try {
@@ -318,7 +322,8 @@ exports.remove = async (req, res) => {
     }
 };
 ```
-```const db = require('../db/connection');
+```js
+const db = require('../db/connection');
 
 exports.getAll = async (req, res) => {
     try {
@@ -379,7 +384,8 @@ exports.remove = async (req, res) => {
     }
 };
 ```
-```const db = require('../db/connection');
+```js
+const db = require('../db/connection');
 
 exports.getAll = async (req, res) => {
     try {
@@ -440,7 +446,8 @@ exports.remove = async (req, res) => {
     }
 };
 ```
-```const db = require('../db/connection');
+```js
+const db = require('../db/connection');
 
 exports.getAll = async (req, res) => {
     try {
