@@ -26,4 +26,4 @@
 
 ## PATCH api/questions/id:
 <img src="./results/updated_question.png" alt="selected question is successfully updated">
-<img src="./results/updated_question_ex.png" alt="selected question is successfully updated example">
+<img src="./results/patched_question_ex.png" alt="selected question is successfully updated example">
