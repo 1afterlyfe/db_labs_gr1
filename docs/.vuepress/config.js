@@ -7,6 +7,7 @@ module.exports = {
       serviceWorker: true,
       updatePopup: true
     },
+    ,
     ['container', {
       type: 'vue',
       before: '<pre class="vue-container"><code>',
