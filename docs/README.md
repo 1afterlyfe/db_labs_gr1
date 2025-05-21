@@ -11,7 +11,6 @@ footer: "ECL 2.0 Licensed | Copyright © 2025 gemonituer"
 
 *студент 2-го курсу, групи ІО-35*<span padding-right:5em></span> **Роман ГУРЕНКО** [Telegram](https://t.me/romaaafr)
 
-\
 **Керівник:**
 
 *доцент кафедри ОТ ФІОТ, к.т.н., доцент*<span padding-right:5em></span> **Андрій БОЛДАК** 
