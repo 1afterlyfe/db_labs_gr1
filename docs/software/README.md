@@ -135,7 +135,7 @@ const pool = mysql.createPool({
 
 module.exports = pool;
 ```
-### Контролери
+### Контролери:
 ```js
 const db = require('../db/connection');
 
@@ -507,4 +507,83 @@ exports.remove = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+```
+### Маршрути:
+```js
+const express = require('express');
+const router = express.Router();
+const answerController = require('../controllers/answerController');
+
+router.get('/', answerController.getAll);
+router.get('/:id', answerController.getById);
+router.post('/', answerController.create);
+router.patch('/:id', answerController.update);
+router.delete('/:id', answerController.remove);
+
+module.exports = router;
+```
+```js
+const express = require('express');
+const router = express.Router();
+const questionController = require('../controllers/questionController');
+
+router.get('/', questionController.getAll);
+router.get('/:id', questionController.getById);
+router.post('/', questionController.create);
+router.patch('/:id', questionController.update);
+router.delete('/:id', questionController.remove);
+
+module.exports = router;
+```
+```js
+const express = require('express');
+const router = express.Router();
+const responseController = require('../controllers/responseController');
+
+router.get('/', responseController.getAll);
+router.get('/:id', responseController.getById);
+router.post('/', responseController.create);
+router.patch('/:id', responseController.update);
+router.delete('/:id', responseController.remove);
+
+module.exports = router;
+```
+```js
+const express = require('express');
+const router = express.Router();
+const surveyLinkController = require('../controllers/surveyLinkController');
+
+router.get('/', surveyLinkController.getAll);
+router.get('/:id', surveyLinkController.getById);
+router.post('/', surveyLinkController.create);
+router.patch('/:id', surveyLinkController.update);
+router.delete('/:id', surveyLinkController.remove);
+
+module.exports = router;
+```
+```js
+const express = require('express');
+const router = express.Router();
+const surveyController = require('../controllers/surveyController');
+
+router.get('/', surveyController.getAll);
+router.get('/:id', surveyController.getById);
+router.post('/', surveyController.create);
+router.patch('/:id', surveyController.update);
+router.delete('/:id', surveyController.remove);
+
+module.exports = router;
+```
+```js
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+
+router.get('/', userController.getAll);
+router.get('/:id', userController.getById);
+router.post('/', userController.create);
+router.patch('/:id', userController.update);
+router.delete('/:id', userController.remove);
+
+module.exports = router;
 ```
