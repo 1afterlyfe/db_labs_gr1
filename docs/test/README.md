@@ -20,3 +20,10 @@
 ## DELETE api/users/id:
 <img src="./results/delete_user.png" alt="user successfully deleted">
 <img src="./results/deleted_user.png" alt="user successfully deleted example">
+
+## GET api/questions:
+<img src="./results/get_question.png" alt="list of questions successfully returned">
+
+## PATCH api/questions/id:
+<img src="./results/updated_question.png" alt="selected question is successfully updated">
+<img src="./results/updated_question_ex.png" alt="selected question is successfully updated example">
